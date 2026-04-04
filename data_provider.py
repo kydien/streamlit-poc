@@ -68,6 +68,8 @@ class DataProvider:
         """Nutzt den stabilsten Endpunkt für den Key-Check."""
         # /quote/ ist im Free-Tier fast immer offen
         url = f"{self.base_url}/quote/AAPL?apikey={self.api_key}"
+        print(f"API {self.api_key}")
+        print(f"URL:{url} ")
         try:
             response = requests.get(url, timeout=10)
 
