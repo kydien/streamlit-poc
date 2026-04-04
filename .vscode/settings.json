@@ -1,0 +1,15 @@
+{
+    "python.analysis.typeCheckingMode": "basic",
+    "editor.wordWrap": "on",
+    "editor.minimap.enabled": false,
+    "files.autoSave": "afterDelay",
+    "files.autoSaveDelay": 1000,
+    "editor.formatOnSave": true, // Formatiert beim Speichern (via Ruff)
+    "editor.codeActionsOnSave": {
+        "source.organizeImports": "always" // Hält deine Importe sauber
+    },
+    "errorLens.enabledDiagnosticLevels": [
+        "error",
+        "warning"
+    ]
+}
