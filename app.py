@@ -21,7 +21,8 @@ provider = DataProvider(api_key)
 if st.button("🚀 Profi-Scan starten"):
     # 1. Symbole laden
     with st.spinner("Lade S&P 500..."):
-        symbols = provider.get_sp500_symbols()
+        symbols = ["AAPL", "MSFT", "GOOGL", "AMZN", "TSLA", "META", "NVDA", "NFLX"]
+        # symbols = provider.get_sp500_symbols()
 
     if not symbols:
         st.error("API Fehler: Konnte Symbole nicht laden. Key korrekt?")
