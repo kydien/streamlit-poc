@@ -67,7 +67,8 @@ class DataProvider:
     def test_connection(self) -> dict:
         """Nutzt den stabilsten Endpunkt für den Key-Check."""
         # /quote/ ist im Free-Tier fast immer offen
-        url = f"{self.base_url}/quote/AAPL?apikey={self.api_key}"
+        # url = f"{self.base_url}/quote/AAPL?apikey={self.api_key}"
+        url = f"{self.base_url}/index-list?apikey={self.api_key}"
         print(f"API {self.api_key}")
         print(f"URL:{url} ")
         try:
