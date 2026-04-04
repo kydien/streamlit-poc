@@ -3,4 +3,6 @@ yfinance
 pandas
 pandas-ta
 lxml
+html5lib
+BeautifulSoup4
 streamlit

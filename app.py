@@ -21,7 +21,8 @@ def get_sp500_tickers():
     # Erst die Seite laden
     response = requests.get(url, headers=headers)
     # Dann die Tabelle aus dem Text der Antwort parsen
-    table = pd.read_html(response.text)
+    # table = pd.read_html(response.text)
+    table = pd.read_html(response.text, flavor="bs4")
     df = table[0]
     return df["Symbol"].tolist()
 
@@ -34,7 +35,8 @@ def get_dax_tickers():
     }
 
     response = requests.get(url, headers=headers)
-    tables = pd.read_html(response.text)
+    # tables = pd.read_html(response.text)
+    tables = pd.read_html(response.text, flavor="bs4")
 
     for table in tables:
         if "Symbol" in table.columns and len(table) > 35:
