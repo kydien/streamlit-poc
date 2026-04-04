@@ -1,3 +1,5 @@
+import io
+
 import pandas as pd
 import pandas_ta as ta
 import requests  # WICHTIG: Füge dies oben bei deinen Imports hinzu
@@ -13,16 +15,17 @@ st.title("🎯 Multi-Dimensionaler Aktien-Scanner")
 @st.cache_data(ttl=86400)
 def get_sp500_tickers():
     url = "https://en.wikipedia.org/wiki/List_of_S%26P_500_companies"
-    # Wir tarnen uns als normaler Browser
-    headers = {
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36"
-    }
+    headers = {"User-Agent": "Mozilla/5.0"}
 
-    # Erst die Seite laden
     response = requests.get(url, headers=headers)
-    # Dann die Tabelle aus dem Text der Antwort parsen
-    # table = pd.read_html(response.text)
-    table = pd.read_html(response.text, flavor="bs4")
+
+    # Sicherstellen, dass die Antwort nicht leer ist
+    if response.status_code != 200:
+        st.error(f"Fehler beim Laden von Wikipedia: {response.status_code}")
+        return []
+
+    # WICHTIG: response.text in StringIO einpacken
+    table = pd.read_html(io.StringIO(response.text), flavor="bs4")
     df = table[0]
     return df["Symbol"].tolist()
 
