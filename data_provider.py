@@ -13,7 +13,8 @@ class DataProvider:
         """Holt die S&P 500 Liste über den stabilen Financial-Statement-Endpunkt."""
         # Wir nutzen den 'constituents' Endpunkt, der oft zuverlässiger ist
         url = f"{self.base_url}/index-list?apikey={self.api_key}"
-        print(f"{self.api_key}")
+        print(f"API {self.api_key}")
+        print(f"URL:{url} ")
         try:
             response = requests.get(url, timeout=10)
 
