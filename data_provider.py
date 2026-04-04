@@ -23,16 +23,16 @@ class DataProvider:
             print(f"[SUCCESS] {len(symbols)} Symbole geladen.")
             return symbols
         except Exception as e:
-            st.error(f"S&P 500 Fehler: {e}")
+            print(f"[ERROR] Wikipedia S&P 500 fehlgeschlagen: {e}")
             return []
 
     @st.cache_data(ttl=86400)
     def get_dax_symbols(_self) -> list:
+        print("\n[INFO] Lade DAX Liste von Wikipedia...")
         url = "https://de.wikipedia.org/wiki/DAX"
         try:
             response = requests.get(url, headers=_self.headers, timeout=10)
             tables = pd.read_html(io.StringIO(response.text), flavor="bs4")
-            # Suche die Tabelle mit den DAX-Werten
             for table in tables:
                 if "Symbol" in table.columns:
                     symbols = [str(s).strip() + ".DE" for s in table["Symbol"].tolist()]
@@ -40,11 +40,34 @@ class DataProvider:
                     return symbols
             return []
         except Exception as e:
-            st.error(f"DAX Fehler: {e}")
+            print(f"[ERROR] Wikipedia DAX fehlgeschlagen: {e}")
             return []
 
     def get_stock_data(self, symbol: str) -> tuple[dict, pd.Series]:
-        ticker = yf.Ticker(symbol)
-        # 3 Monate Historie für einen stabilen RSI(14)
-        hist = ticker.history(period="3mo")
-        return ticker.info, hist["Close"]
+        """Holt Daten und gibt Status im Terminal aus."""
+        print(
+            f"[SCAN] Analysiere: {symbol: <6}", end="\r"
+        )  # \r überschreibt die Zeile für Sauberkeit
+
+        try:
+            ticker = yf.Ticker(symbol)
+
+            # 1. Fundamentaldaten
+            info = ticker.info
+            peg = info.get("pegRatio")
+
+            # 2. Historie
+            hist = ticker.history(period="3mo")
+
+            # Terminal Detail-Log (optional, falls du jede Zeile einzeln willst)
+            # print(f"[DATA] {symbol} - PEG: {peg} - Hist: {len(hist)} Tage")
+
+            if hist.empty:
+                print(f"[WARN] {symbol}: Keine Historie gefunden.")
+                return info, pd.Series()
+
+            return info, hist["Close"]
+
+        except Exception as e:
+            print(f"\n[ERROR] {symbol}: Datenabruf fehlgeschlagen: {e}")
+            return {}, pd.Series()
