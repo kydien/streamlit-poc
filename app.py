@@ -1,26 +1,32 @@
 import streamlit as st
 
-from data_provider import DataProvider
+# WICHTIG: Erst die Standard-Bibliotheken, dann deine eigenen
+try:
+    from data_provider import DataProvider
+except ImportError:
+    st.error("Datei 'data_provider.py' nicht im Hauptverzeichnis gefunden!")
+    st.stop()
 
 st.title("🛠️ FMP API Connection Check")
 
-api_key = st.sidebar.text_input("FMP API Key eingeben", type="password")
+# Key-Eingabe
+api_key = st.sidebar.text_input(
+    "FMP API Key",
+    type="password",
+    help="Kopiere den Key direkt aus deinem FMP Dashboard",
+)
 
 if st.button("🔌 Verbindung testen"):
     if not api_key:
-        st.warning("Bitte erst einen Key eingeben!")
+        st.warning("Bitte gib einen API-Key ein.")
     else:
         provider = DataProvider(api_key)
-        with st.spinner("Prüfe Verbindung..."):
+        with st.spinner("Prüfe Verbindung zu FMP..."):
             res = provider.test_connection()
 
             if res["data"]:
-                st.success("✅ Verbindung erfolgreich!")
-                # Zeige ein paar Basis-Daten zur Bestätigung
-                col1, col2 = st.columns(2)
-                col1.metric("Unternehmen", res["data"].get("companyName"))
-                col2.metric("Währung", res["data"].get("currency"))
-                st.json(res["data"])  # Zeigt das volle Profil zur Inspektion
+                st.success(f"✅ Verbindung steht! Aktie: {res['data'].get('name')}")
+                st.metric("Kurs (AAPL)", f"{res['data'].get('price')} USD")
             else:
-                st.error(f"❌ Verbindung fehlgeschlagen: {res['error']}")
-                st.info("Schau ins Terminal für den genauen Status-Code.")
+                st.error(f"❌ {res['error']}")
+                st.info("Hinweis: Keys werden oft erst nach E-Mail-Bestätigung aktiv.")
