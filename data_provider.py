@@ -60,3 +60,39 @@ class DataProvider:
             return pd.Series()
         except Exception:
             return pd.Series()
+
+    def test_connection(self) -> dict:
+        """Prüft den API-Key mit einem einfachen Profil-Abruf für Apple."""
+        symbol = "AAPL"
+        url = f"{self.base_url}/profile/{symbol}?apikey={self.api_key}"
+
+        try:
+            print(f"\n[TEST] Kontaktiere FMP für {symbol}...")
+            response = requests.get(url, timeout=10)
+
+            # Ergebnis-Analyse
+            result = {"status_code": response.status_code, "data": None, "error": None}
+
+            if response.status_code == 200:
+                data = response.json()
+                if data and len(data) > 0:
+                    print(
+                        f"[SUCCESS] Verbindung hergestellt! Name: {data[0].get('companyName')}"
+                    )
+                    result["data"] = data[0]
+                else:
+                    print("[WARN] Status 200, aber keine Daten erhalten (leere Liste).")
+                    result["error"] = "Leere Antwort vom Server."
+            elif response.status_code == 403:
+                print(
+                    "[ERROR] 403 Forbidden: API-Key ist ungültig oder Plan-Limit erreicht."
+                )
+                result["error"] = "Ungültiger API-Key."
+            else:
+                print(f"[ERROR] Unerwarteter Status: {response.status_code}")
+                result["error"] = f"Server meldet Status {response.status_code}"
+
+            return result
+        except Exception as e:
+            print(f"[CRITICAL] Netzwerkfehler: {e}")
+            return {"status_code": 0, "data": None, "error": str(e)}
