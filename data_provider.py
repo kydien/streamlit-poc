@@ -12,7 +12,8 @@ class DataProvider:
     def get_sp500_symbols(self) -> list:
         """Holt die S&P 500 Liste über den stabilen Financial-Statement-Endpunkt."""
         # Wir nutzen den 'constituents' Endpunkt, der oft zuverlässiger ist
-        url = f"{self.base_url}/stock-list?apikey={self.api_key}"
+        url = f"{self.base_url}/index-list?apikey={self.api_key}"
+        print(f"{self.api_key}")
         try:
             response = requests.get(url, timeout=10)
 
