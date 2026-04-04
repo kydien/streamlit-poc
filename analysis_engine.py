@@ -1,12 +1,20 @@
 import pandas as pd
+import pandas_ta as ta
+
+_ = ta.version
 
 
 def calculate_rsi(price_data: pd.Series, window: int = 14) -> float | None:
     """Berechnet den RSI für eine Schlusskurs-Serie."""
     if len(price_data) < window + 1:
         return None
-    rsi_series = price_data.ta.rsi(price_data, length=window)
-    return rsi_series.iloc[-1] if not rsi_series.empty else None
+
+    rsi_series = ta.rsi(price_data, length=window)  # type:ignore
+
+    if rsi_series is None or rsi_series.empty:
+        return None
+
+    return float(rsi_series.iloc[-1])
 
 
 def evaluate_strategy(

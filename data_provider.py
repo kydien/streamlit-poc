@@ -14,11 +14,14 @@ class DataProvider:
 
     @st.cache_data(ttl=86400)
     def get_sp500_symbols(_self) -> list:
+        print("\n[INFO] Lade S&P 500 Liste von Wikipedia...")
         url = "https://en.wikipedia.org/wiki/List_of_S%26P_500_companies"
         try:
             response = requests.get(url, headers=_self.headers, timeout=10)
             tables = pd.read_html(io.StringIO(response.text), flavor="bs4")
-            return tables[0]["Symbol"].tolist()
+            symbols = tables[0]["Symbol"].tolist()
+            print(f"[SUCCESS] {len(symbols)} Symbole geladen.")
+            return symbols
         except Exception as e:
             st.error(f"S&P 500 Fehler: {e}")
             return []
@@ -32,7 +35,9 @@ class DataProvider:
             # Suche die Tabelle mit den DAX-Werten
             for table in tables:
                 if "Symbol" in table.columns:
-                    return [str(s).strip() + ".DE" for s in table["Symbol"].tolist()]
+                    symbols = [str(s).strip() + ".DE" for s in table["Symbol"].tolist()]
+                    print(f"[SUCCESS] {len(symbols)} DAX Symbole geladen.")
+                    return symbols
             return []
         except Exception as e:
             st.error(f"DAX Fehler: {e}")

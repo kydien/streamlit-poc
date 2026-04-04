@@ -3,12 +3,9 @@ import sys
 
 import pandas as pd
 
-from analysis_engine import calculate_rsi, evaluate_strategy
-
 # Dieser Block erlaubt es dem Skript, die Dateien im Ordner darüber zu sehen
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
-# JETZT kannst du die richtige Datei importieren
 from analysis_engine import calculate_rsi, evaluate_strategy
 
 
