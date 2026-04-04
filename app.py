@@ -89,8 +89,8 @@ def screen_stocks(ticker_list, peg_max, rsi_max):
 
 st.sidebar.header("Filter-Einstellungen")
 target_index = st.sidebar.selectbox("Index wählen", ["S&P 500", "DAX"])
-peg_input = st.sidebar.slider("Maximales PEG (Value)", 0.1, 2.0, 1.0)
-rsi_input = st.sidebar.slider("Maximaler RSI (Oversold)", 10, 40, 25)
+peg_input = st.sidebar.slider("Maximales PEG (Value)", 0.1, 3.0, 1.0)
+rsi_input = st.sidebar.slider("Maximaler RSI (Oversold)", 10, 70, 25)
 
 # VIX Check für das Marktumfeld
 vix_data = yf.Ticker("^VIX").history(period="1d")
