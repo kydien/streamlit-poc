@@ -7,12 +7,12 @@ class DataProvider:
     def __init__(self, api_key: str):
         # Entferne eventuelle Leerzeichen, die beim Kopieren mitgerutscht sind
         self.api_key = api_key.strip()
-        self.base_url = "https://financialmodelingprep.com/api/v3"
+        self.base_url = "https://financialmodelingprep.com/stable"
 
     def get_sp500_symbols(self) -> list:
         """Holt die S&P 500 Liste über den stabilen Financial-Statement-Endpunkt."""
         # Wir nutzen den 'constituents' Endpunkt, der oft zuverlässiger ist
-        url = f"{self.base_url}/sp500_constituent?apikey={self.api_key}"
+        url = f"{self.base_url}/stock-list?apikey={self.api_key}"
         try:
             response = requests.get(url, timeout=10)
 
