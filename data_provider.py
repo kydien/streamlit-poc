@@ -60,7 +60,7 @@ class DataProvider:
             hist = ticker.history(period="3mo")
 
             # Terminal Detail-Log (optional, falls du jede Zeile einzeln willst)
-            # print(f"[DATA] {symbol} - PEG: {peg} - Hist: {len(hist)} Tage")
+            print(f"[DATA] {symbol} - PEG: {peg} - Hist: {len(hist)} Tage")
 
             if hist.empty:
                 print(f"[WARN] {symbol}: Keine Historie gefunden.")
