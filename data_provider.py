@@ -64,25 +64,37 @@ class DataProvider:
         except Exception:
             return pd.Series()
 
-    def test_connection(self) -> dict:
+    def test_connection(self) -> dict | None:
         """Nutzt den stabilsten Endpunkt für den Key-Check."""
         # /quote/ ist im Free-Tier fast immer offen
         # url = f"{self.base_url}/quote/AAPL?apikey={self.api_key}"
-        url = f"{self.base_url}/index-list?apikey={self.api_key}"
+        url = f"{self.base_url}/sp500-constituent?apikey={self.api_key}"
         print(f"API {self.api_key}")
         print(f"URL:{url} ")
+
         try:
             response = requests.get(url, timeout=10)
 
             if response.status_code == 200:
                 data = response.json()
-                if isinstance(data, list) and len(data) > 0:
-                    return {"data": data[0], "error": None}
-                return {"data": None, "error": "Key gültig, aber keine Daten (Quota?)."}
 
-            elif response.status_code == 403:
-                return {"data": None, "error": "403: Key ungültig oder Limit erreicht."}
+                print(f"\n[ERFOLG] {len(data)} Unternehmen im S&P 500 gefunden.\n")
+                print("-" * 50)
+                print(f"{'Symbol':<10} | {'Name':<30}")
+                print("-" * 50)
 
-            return {"data": None, "error": f"Server-Status: {response.status_code}"}
+                # Die ersten 20 Symbole ausgeben
+                for entry in data[:20]:
+                    symbol = entry.get("symbol")
+                    name = entry.get("name")
+                    print(f"{symbol:<10} | {name:<30}")
+
+                print("-" * 50)
+                print(f"... und {len(data) - 20} weitere.")
+
+            else:
+                print(f"[FEHLER] Status Code: {response.status_code}")
+                print(f"Antwort: {response.text}")
+
         except Exception as e:
-            return {"data": None, "error": str(e)}
+            print(f"[CRITICAL] Fehler bei der Anfrage: {e}")
