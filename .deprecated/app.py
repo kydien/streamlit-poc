@@ -1,5 +1,9 @@
 # import requests
 # import streamlit as st
+import os
+
+from dotenv import load_dotenv
+
 from data_provider import DataProvider
 
 # WICHTIG: Erst die Standard-Bibliotheken, dann deine eigenen
@@ -34,9 +38,11 @@ from data_provider import DataProvider
 #                 st.info("Hinweis: Keys werden oft erst nach E-Mail-Bestätigung aktiv.")
 
 
-
-
 if __name__ == "__main__":
-    api_key = "3PDjTgOXt0PVNmFl1buyOIyujOgtCNia"
-    provider = DataProvider(api_key)
+    load_dotenv()
+    # api_key = os.get env("gemini_api_key")
+    api_key = os.environ["gemini_api_key"]
+    base_url = os.getenv("base_url")
+    debug_mode = os.getenv("DEBUG") == "True"
+    provider = DataProvider(api_key, base_url)
     provider.test_connection()

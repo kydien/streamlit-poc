@@ -1,0 +1,8 @@
+# Verzeichnisse mit sensiblen Provider-Logiken
+C:\Users\lloyd\OneDrive\Dokumente\GitHub\streamlit-poc\secret
+
+# Spezifische Dateitypen blockieren
+*.env
+*.log
+*.venv
+database_schema.sql

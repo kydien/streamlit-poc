@@ -1,13 +1,12 @@
 import pandas as pd
 import requests
-import streamlit as st
 
 
 class DataProvider:
-    def __init__(self, api_key: str):
+    def __init__(self, api_key: str | None, base_url: str | None):
         # Entferne eventuelle Leerzeichen, die beim Kopieren mitgerutscht sind
         self.api_key = api_key.strip()
-        self.base_url = "https://financialmodelingprep.com/stable"
+        self.base_url = base_url.strip()
 
     def get_sp500_symbols(self) -> list:
         """Holt die S&P 500 Liste über den stabilen Financial-Statement-Endpunkt."""
@@ -67,8 +66,8 @@ class DataProvider:
     def test_connection(self) -> dict | None:
         """Nutzt den stabilsten Endpunkt für den Key-Check."""
         # /quote/ ist im Free-Tier fast immer offen
-        # url = f"{self.base_url}/quote/AAPL?apikey={self.api_key}"
-        url = f"{self.base_url}/sp500-constituent?apikey={self.api_key}"
+        url = f"{self.base_url}/quote/AAPL?apikey={self.api_key}"
+        #url = f"{self.base_url}/sp500-constituent?apikey={self.api_key}"
         print(f"API {self.api_key}")
         print(f"URL:{url} ")
 

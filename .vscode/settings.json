@@ -11,5 +11,7 @@
     "errorLens.enabledDiagnosticLevels": [
         "error",
         "warning"
-    ]
+    ],
+    "geminicodeassist.project": "aktien-architekt-2026",
+    "geminicodeassist.enableTelemetry": false
 }

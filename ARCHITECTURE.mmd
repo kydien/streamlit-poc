@@ -1,0 +1,54 @@
+classDiagram
+    %% GLOBALE DEFINITIONEN UND DATENTYPEN
+    %% Wir nutzen Pseudotypen, die Gemini als Python-Typen interpretiert.
+
+    %% ==========================================
+    %% 1. DATA LOADER (Modul: loader/)
+    %% VERANTWORTUNG: Reiner I/O, Datenbeschaffung, Validierung der API-Antwort.
+    %% KEINE LOGIK, KEINE BERECHNUNGEN.
+    %% ==========================================
+    class Data_Loader {
+        -api_key: str
+        -base_url: str
+        +download_yfinance_market_data(tickers: List~str~, period: str = "2y") Optional~pd.DataFrame~
+    }
+
+    %% ==========================================
+    %% 2. DATA TRANSFORMER (Modul: transformer/)
+    %% VERANTWORTUNG: Datenreinigung, technische Indikatoren, Formatanpassung.
+    %% KEIN I/O (Kein Internet/API), NUR DATENVERARBEITUNG.
+    %% ==========================================
+    class Data_Transformer {
+        +clean_raw_data(raw_json) pd.DataFrame
+        +merge_datasets(df1, df2) pd.DataFrame
+        +apply_technical_indicators(df, indicators_list) pd.DataFrame
+        +handle_missing_values(df, strategy) pd.DataFrame
+    }
+
+    %% ==========================================
+    %% 3. RISK MANAGER (Modul: module/
+    %% VERANTWORTUNG: Mathematische Modelle, Risikokennzahlen, Signalgenerierung.
+    %% NUR MATHEMATIK, KEINE DATENMANIPULATION (NUR READ-ONLY DF).
+    %% ==========================================
+    class Risk_Module {
+        %% Private Funktionen (Interne Logik)
+        - _process_metrics(df: pd.DataFrame) Dict~str, Any~
+
+        %% Öffentliche Funktionen (Schnittstellen)
+        + fetch_raw_risk_data() Optional~Dict~str, Any~~
+        + display_risk_metrics(metrics: Dict~str, Any~)
+        + generate_action_recommendations(metrics: Dict~str, Any~) List~str~
+    }
+
+    %% ==========================================
+    %% BEZIEHUNGEN & DATENFLUSS (STRIKTE REGELN)
+    %% ==========================================
+    Data_Loader ..> Data_Transformer : "Liefert Raw Data (Dict/JSON)"
+    Data_Transformer ..> Risk_Module : "Liefert Cleaned Data (pd.DataFrame)"
+
+    %% ANMERKUNGEN FÜR DIE KI (COHERENCE GUARDS)
+    note for Data_Loader "Pfad: ./loader/data_loader.py"
+    note for Data_Transformer "Pfad: ./transformer/transformer.py"
+    note for Data_Loader "Rule: No calculations. Only fetch and validate."
+    note for Data_Transformer "Rule: No I/O. Input: JSON, Output: DataFrame."
+    note for Risk_Module "Pfad: ./module/risk_module.py"
